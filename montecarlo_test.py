@@ -1,5 +1,5 @@
 import unittest
-from montecarlo import *
+from montecarlo.montecarlo import *
 
 class TestDie(unittest.TestCase):
 
