@@ -1,0 +1,16 @@
+PS C:\Users\21jac\OneDrive\Desktop\montecarlo> & C:/Users/21jac/AppData/Local/Microsoft/WindowsApps/python3.10.exe c:/Users/21jac/OneDrive/Desktop/montecarlo/montecarlo_test.py
+test_combo (__main__.TestAnalyzer) ... ok
+test_face_counts_per_roll (__main__.TestAnalyzer) ... ok
+test_jackpot (__main__.TestAnalyzer) ... ok
+test_change_weight_invalid_face (__main__.TestDie) ... ok
+test_change_weight_invalid_weight (__main__.TestDie) ... ok
+test_change_weight_valid (__main__.TestDie) ... ok
+test_roll (__main__.TestDie) ... ok
+test_show_faces_and_weights (__main__.TestDie) ... ok
+test_show_results_narrow (__main__.TestGame) ... ok
+test_show_results_wide (__main__.TestGame) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.011s
+
+OK
