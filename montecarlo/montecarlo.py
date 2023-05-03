@@ -22,19 +22,6 @@ class Die:
     def show_faces_and_weights(self):
         return pd.DataFrame({'face': self.faces, 'weight': self.weights})
 
-# # Create a die with faces 'A', 'B', and 'C'
-# die = Die(['A', 'B', 'C'])
-
-# # Show the die's current faces and weights
-# print(die.show_faces_and_weights())
-
-# # Change the weight of face 'B' to 2.5
-# die.change_weight('B', 2.5)
-
-# # Roll the die 5 times
-# outcomes = die.roll(5)
-# print(outcomes)
-
 class Game:
     def __init__(self, dice):
         self.dice = dice
@@ -54,47 +41,42 @@ class Game:
         else:
             raise ValueError(f"Invalid form '{form}'")
 
-# # Create two dice with faces 'A', 'B', and 'C'
-# die1 = Die(['A', 'B', 'C'])
-# die2 = Die(['A', 'B', 'C'])
-
-# # Create a game with the two dice
-# game = Game([die1, die2])
-
-# # Play the game 3 times
-# game.play(3)
-
-# # Show the results in wide form
-# print(game.show_results(form='wide'))
-
-# # Show the results in narrow form
-# print(game.show_results(form='narrow'))
-
 class Analyzer:
     def __init__(self, game):
         self.game = game
-        self.dtype = type(game.dice[0].faces[0])
+        self.data_type = type(game.dice[0].faces[0])
+        self.jackpot_results = None
+        self.combo_results = None
+        self.face_counts = None
 
-    def jackpot(self, face_idx=0):
-        jackpot_count = (self.game.results == self.game.results.iloc[:, face_idx]).all(axis=1).sum()
-        self.jackpot_results = pd.DataFrame({'Jackpot Count': jackpot_count}, index=[0])
-        return jackpot_count
-
+    def jackpot(self):
+        rolls = self.game.results
+        n_dice = len(self.game.dice)
+        jackpot_counts = 0
+        for i in range(n_dice):
+            first_face = self.game.dice[i].faces[0]
+            mode = rolls.iloc[:, i].mode()[0]
+            if mode == first_face:
+                jackpot_counts += 1
+        self.jackpot_results = pd.DataFrame({'jackpot_count': [jackpot_counts]}, index=[0])
+        return jackpot_counts
     def combo(self):
-        combo_counts = self.game.results.apply(lambda x: len(set(x)), axis=1).value_counts().sort_index()
-        combo_index = pd.MultiIndex.from_tuples([(i, ) for i in range(1, len(self.game.dice) + 1)])
-        combo_results = pd.DataFrame(combo_counts, columns=['Combo Count'], index=combo_index)
-        self.combo_results = combo_results
-        return combo_results
+        """
+        Compute the frequency of each possible combination of faces in the rolls.
+        """
+        rolls = self.game.results
+        combos = [tuple(sorted(set(row))) for _, row in rolls.iterrows()]
+        combo_counts = pd.Series(combos).value_counts().sort_index()
+        combo_index = pd.MultiIndex.from_tuples(combo_counts.index, names=['combo'])
+        self.combo_results = pd.DataFrame({'combo_count': combo_counts}, index=combo_index)
+        return self.combo_results
 
     def face_counts_per_roll(self):
-        num_dice = len(self.game.dice[0].faces)
-        face_counts = pd.DataFrame(0, index=self.game.results.index, columns=self.game.dice[0].faces)
-        for i in range(len(self.game.dice)):
-            if len(self.game.dice[i].faces) != num_dice:
-                raise ValueError("All dice must have the same number of faces")
-            for face in self.game.dice[i].faces:
-                face_counts[(i, face)] = self.game.results.iloc[:, i].apply(lambda x: x.count(face))
-        self.face_counts_results = face_counts
+        rolls = self.game.results
+        face_counts = rolls.apply(pd.Series.value_counts).fillna(0).astype(int)
+        face_counts.index.name = 'roll'
+        self.face_counts = face_counts
         return face_counts
+
+
 

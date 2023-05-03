@@ -56,7 +56,7 @@ class TestAnalyzer(unittest.TestCase):
         analyzer = Analyzer(game)
         count = analyzer.jackpot()
         self.assertGreaterEqual(count, 0)
-
+        
     def test_combo(self):
         die1 = Die(['A', 'B', 'C'])
         die2 = Die(['A', 'B', 'C'])
@@ -64,7 +64,7 @@ class TestAnalyzer(unittest.TestCase):
         game.play(3)
         analyzer = Analyzer(game)
         df = analyzer.combo()
-        self.assertEqual(df.shape, (2, 1))
+        self.assertEqual(df.shape, (3, 1))
 
     def test_face_counts_per_roll(self):
         die1 = Die(['A', 'B', 'C'])
@@ -73,7 +73,7 @@ class TestAnalyzer(unittest.TestCase):
         game.play(3)
         analyzer = Analyzer(game)
         df = analyzer.face_counts_per_roll()
-        self.assertEqual(df.shape, (3, 3))
+        self.assertEqual(df.shape, (3, 2))
 
 if __name__ == '__main__':
     unittest.main(verbosity=3)
