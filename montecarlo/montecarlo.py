@@ -1,6 +1,5 @@
 import random
 import pandas as pd
-
 class Die:
     def __init__(self, faces):
         self.faces = faces
