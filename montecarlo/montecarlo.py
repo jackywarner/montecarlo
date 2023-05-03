@@ -71,6 +71,8 @@ class Analyzer:
         self.combo_results = pd.DataFrame({'combo_count': combo_counts}, index=combo_index)
         return self.combo_results
 
+
+
     def face_counts_per_roll(self):
         rolls = self.game.results
         face_counts = rolls.apply(pd.Series.value_counts).fillna(0).astype(int)
