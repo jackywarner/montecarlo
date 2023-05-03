@@ -18,5 +18,5 @@ setup(
     author='Jack Warner',
     author_email='21jackwarner@gmail.com',
     license='MIT',
-    url='https://github.com/yourusername/montecarlo',
+    url='https://github.com/jackywarner/montecarlo',
 )
